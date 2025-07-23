@@ -4,6 +4,7 @@ import tkinter as tk
 from threading import Thread
 import asyncio
 import time
+import threading
 
 # Read configuration file
 def read_config(config_path):
@@ -43,18 +44,21 @@ def check_port(host, port, timeout=3):
 # Global notification counter for positioning
 notification_count = 0
 max_notifications = 5  # Limit concurrent notifications
+notification_lock = threading.Lock()  # Thread safety for notification positioning
 
 # Show notification window
 def show_notification(title, message):
     global notification_count
     
-    # Limit concurrent notifications
-    if notification_count >= max_notifications:
-        return
+    # Thread-safe check and increment
+    with notification_lock:
+        if notification_count >= max_notifications:
+            return
+        notification_count += 1
+        current_notification_index = notification_count - 1
     
     def run():
         global notification_count
-        notification_count += 1
         
         try:
             root = tk.Tk()
@@ -67,10 +71,25 @@ def show_notification(title, message):
             window_width = 300
             window_height = 200  # Original height
             
-            # Calculate position to avoid overlap
-            notification_index = (notification_count - 1) % max_notifications
+            # Calculate position to avoid overlap with bounds checking
+            notification_index = current_notification_index % max_notifications
             position_right = int(screen_width - window_width - 10)
-            position_down = int(screen_height - window_height - 50 - (notification_index * (window_height + 10)))
+            
+            # Calculate vertical position with bounds checking
+            base_position = screen_height - window_height - 50
+            offset = notification_index * (window_height + 10)
+            position_down = base_position - offset
+            
+            # Ensure notification stays on screen
+            if position_down < 0:
+                # If too many notifications, wrap around or use horizontal offset
+                position_down = base_position - ((notification_index % 2) * (window_height + 10))
+                position_right = int(screen_width - window_width - 10 - ((notification_index // 2) * 20))
+            
+            # Ensure right position is within screen bounds
+            if position_right < 0:
+                position_right = 10
+            
             root.geometry(f"{window_width}x{window_height}+{position_right}+{position_down}")
 
             # Set background color based on message
@@ -100,7 +119,8 @@ def show_notification(title, message):
             # Cleanup when window is destroyed
             def on_destroy():
                 global notification_count
-                notification_count = max(0, notification_count - 1)
+                with notification_lock:
+                    notification_count = max(0, notification_count - 1)
             
             root.protocol("WM_DELETE_WINDOW", on_destroy)
             root.bind("<Destroy>", lambda e: on_destroy() if e.widget == root else None)
@@ -110,7 +130,9 @@ def show_notification(title, message):
         except Exception as e:
             print(f"Error showing notification: {e}")
         finally:
-            notification_count = max(0, notification_count - 1)
+            # Ensure counter is decremented even if there's an exception
+            with notification_lock:
+                notification_count = max(0, notification_count - 1)
 
     Thread(target=run, daemon=True).start()
 
