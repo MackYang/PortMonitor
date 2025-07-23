@@ -1,35 +1,7 @@
 {
   "ports": {
-    "Fyt.Aggregator.HangfireJob": "5254",
-    "Fyt.Aggregator.MobileApi": "5005",
-    "Fyt.Aggregator.WebApi": "5000",
-    "Fyt.Aggregator.IntegrationApi": "5001",
-    "Fyt.BaseData": "2137",
-    "Fyt.Purchase": "2138",
-    "Fyt.Sale": "2139",
-    "Fyt.Report": "2140",
-    "Fyt.Account": "2141",
-    "Fyt.Mdp": "2142",
-    "Fyt.Integration": "2143",
-    "Fyt.Unity": "2144",
-    "Mdp.Aggregator.HangfireJob": "57040",
-    "Mdp.Aggregator.MobileApi": "57049",
-    "Mdp.Aggregator.WebApi": "8000",
-    "Mdp.Aggregator.IntegrationApi": "57045",
-    "Mdp.ImportExport": "49100",
-    "Mdp.Integration": "63819",
-    "Mdp.CustomerCenter": "50933",
-    "Mdp.Tpm": "53202",
-    "Mdp.OrderAdapter": "8085",
-    "Mdp.OrderAdmin": "8084",
-    "Mdp.OrderInternal": "8184",
-    "Mdp.PriceAdapter": "9901",
-    "Mdp.PriceAdmin": "9902",
-    "Mdp.PriceInternal": "9903",
-    "Mdp.MdmAdapter": "8081",
-    "Mdp.MdmAdmin": "8082",
-    "Mdp.MdmAdminApi": "8182",
-    "Mdp.MdmInternal": "8083",
-    "Mdp.Registry": "9500"
+    "Service A": "5000",
+    "Service B": "5011",
+    "Service C": "5012"
   }
 }
