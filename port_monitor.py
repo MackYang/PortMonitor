@@ -93,8 +93,8 @@ def show_notification(title, message):
             root.geometry(f"{window_width}x{window_height}+{position_right}+{position_down}")
 
             # Set background color based on message
-            bg_color = "#ffffff" 
-            text_color = "#000000"
+            bg_color = "#D3D3D3" 
+            text_color = "#080808"
             
             root.configure(bg=bg_color)
             
